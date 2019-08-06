@@ -21,7 +21,7 @@ public interface MusicDao {
     Flowable<List<TableMusic>> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<TableMusic> list);
+    void insertAll(TableMusic tableMusic);
 
 
 }

@@ -12,11 +12,11 @@ import io.reactivex.Flowable;
 public interface IMusicDatasource {
 
 
-    Flowable<TableMusic> getUserById(int id);
+    TableMusic getUserById(int id);
 
-    Flowable<List<TableMusic>> getAll();
+    List<TableMusic> getAll();
 
-    void insertAll(List<TableMusic> list);
+    void insertAll(TableMusic tableMusic);
 
 
 }

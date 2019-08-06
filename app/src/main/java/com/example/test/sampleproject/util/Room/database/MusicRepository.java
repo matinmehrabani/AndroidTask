@@ -1,6 +1,11 @@
 package com.example.test.sampleproject.util.Room.database;
 
+import android.content.Context;
+import android.os.AsyncTask;
+
 import com.example.test.sampleproject.model.TableMusic;
+import com.example.test.sampleproject.util.Room.MusicDao;
+import com.example.test.sampleproject.util.Room.MusicDatabase;
 
 import java.util.List;
 
@@ -8,34 +13,48 @@ import io.reactivex.Flowable;
 
 public class MusicRepository implements IMusicDatasource {
 
-    private  IMusicDatasource mLocalDataSource;
+    private IMusicDatasource mLocalDataSource;
     private static MusicRepository mInstance;
-
-    public MusicRepository(IMusicDatasource mLocalDataSource) {
-        this.mLocalDataSource = mLocalDataSource;
+    private MusicDao musicDao;
+private List<TableMusic> list;
+    public MusicRepository(Context context) {
+        MusicDatabase database=MusicDatabase.getInstance(context);
+        musicDao=database.musicDao();
     }
 
-    public static MusicRepository getInstance(IMusicDatasource mLocalDataSource){
+    public static MusicRepository getInstance(Context context) {
 
-        if(mInstance==null){
+        if (mInstance == null) {
 
-            mInstance=new MusicRepository(mLocalDataSource);
+            mInstance = new MusicRepository(context);
         }
         return mInstance;
     }
 
+
     @Override
-    public Flowable<TableMusic> getUserById(int id) {
-        return mLocalDataSource.getUserById(id);
+    public TableMusic getUserById(final int id) {
+       return null;
     }
 
     @Override
-    public Flowable<List<TableMusic>> getAll() {
-        return mLocalDataSource.getAll();
+    public List<TableMusic> getAll() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                list= (List<TableMusic>) musicDao.getAll();
+            }
+        });
+        return list;
     }
 
     @Override
-    public void insertAll(List<TableMusic> list) {
-mLocalDataSource.insertAll(list);
+    public void insertAll(final TableMusic tableMusic) {
+AsyncTask.execute(new Runnable() {
+    @Override
+    public void run() {
+        musicDao.insertAll(tableMusic);
+    }
+});
     }
 }
